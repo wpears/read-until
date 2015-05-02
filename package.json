@@ -1,0 +1,27 @@
+{
+  "name": "read-until",
+  "version": "0.0.1",
+  "description": "Read bytes from a file until a condition is reached",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wpears/read-until.git"
+  },
+  "keywords": [
+    "read",
+    "offset",
+    "until"
+  ],
+  "author": "Wyatt Pearsall <wyatt.pearsall@cfpb.gov>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wpears/read-until/issues"
+  },
+  "homepage": "https://github.com/wpears/read-until",
+  "devDependencies": {
+    "tape": "^4.0.0"
+  }
+}
