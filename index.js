@@ -16,22 +16,25 @@ function readUntil(file, match, bytes, cb){
   fs.open(file, 'r', function(err, fileDesc){
     if(err) cb(err);
     fd = fileDesc;
-    read(0, bytes);
+    read(bytes);
   });
 
 
-  function read(offset, byteLength){
-    return fs.read(fd, buffer, offset, byteLength, offset, parseMatch);
+  function read(byteLength){
+    return fs.read(fd, buffer, bytesBeforeMatch, byteLength, bytesBeforeMatch, parseMatch);
   }
 
 
   function parseMatch(err, bytesRead, buf){
     if(err) cb(err); 
     
-    //add 6 so weird astral code points aren't borked
-    var str = buf.slice(-(bytesRead + 6)).toString();
-    var test = str.match(match);
+    //subtract 6 so weird astral code points aren't borked
+    var sliceStart = bytesBeforeMatch - 6;
+    if(sliceStart<0) sliceStart = 0;
 
+    var str = buf.slice(sliceStart, bytesBeforeMatch + bytesRead).toString();
+    var test = str.match(match);
+console.log(sliceStart, bytesRead+bytesBeforeMatch, buf, str, test);
     if(test){
       bytesBeforeMatch += test.index;
       return cb(null,buf.slice(0, bytesBeforeMatch));
