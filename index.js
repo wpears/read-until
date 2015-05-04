@@ -29,7 +29,7 @@ function readUntil(file, match, bytes, cb){
     if(err) cb(err); 
     
     //add 6 so weird astral code points aren't borked
-    var str = buf.slice(-(bytesRead + 6));
+    var str = buf.slice(-(bytesRead + 6)).toString();
     var test = str.match(match);
 
     if(test){
@@ -42,4 +42,15 @@ function readUntil(file, match, bytes, cb){
     }
   }
 
+
+  function checkBuffer(){
+    if(bytesBeforeMatch === buffer.length){
+      var newBuf = new Buffer(bytesBeforeMatch * 15);  
+      buffer.copy(newBuf);
+      buffer = newBuf;
+    }
+  }
+
 }
+
+module.exports = readUntil;
