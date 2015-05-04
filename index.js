@@ -29,17 +29,23 @@ function readUntil(file, match, bytes, cb){
     if(err) cb(err); 
     
     //subtract 6 so weird astral code points aren't borked
-    var sliceStart = bytesBeforeMatch - 6;
+    var startBytes = bytesBeforeMatch;
+    var sliceStart = startBytes - 6;
     if(sliceStart<0) sliceStart = 0;
 
-    var str = buf.slice(sliceStart, bytesBeforeMatch + bytesRead).toString();
+    var str = buf.slice(sliceStart, startBytes + bytesRead).toString();
     var test = str.match(match);
-console.log(sliceStart, bytesRead+bytesBeforeMatch, buf, str, test);
     if(test){
       bytesBeforeMatch += test.index;
       return cb(null,buf.slice(0, bytesBeforeMatch));
     }else{
       bytesBeforeMatch += bytesRead; 
+      
+      //Reached EOF
+      if(bytesRead <= startBytes){
+        return cb(new Error('No match.'));
+      }
+
       checkBuffer();
       return read(bytesBeforeMatch, bytesRead * 2);
     }
