@@ -32,11 +32,13 @@ function readUntil(file, match, bytes, cb){
     var startBytes = bytesBeforeMatch;
     var sliceStart = startBytes - 6;
     if(sliceStart<0) sliceStart = 0;
+    //sliceDiff to track the byte offset when adding the match index
+    var sliceDiff = startBytes - sliceStart;
 
     var str = buf.slice(sliceStart, startBytes + bytesRead).toString();
     var test = str.match(match);
     if(test){
-      bytesBeforeMatch += test.index;
+      bytesBeforeMatch += test.index - sliceDiff;
       return cb(null,buf.slice(0, bytesBeforeMatch));
     }else{
       bytesBeforeMatch += bytesRead; 
@@ -47,7 +49,7 @@ function readUntil(file, match, bytes, cb){
       }
 
       checkBuffer();
-      return read(bytesBeforeMatch, bytesRead * 2);
+      return read(bytesRead * 2);
     }
   }
 
