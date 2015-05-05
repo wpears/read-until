@@ -36,3 +36,20 @@ test('Match doesn\'t exist, file fits into initial buffer', function(t){
     t.notOk(buf, 'No data returned if no match exists.') 
   })
 })
+
+
+test('Match exists, buffer expands', function(t){
+  t.plan(2);
+  readUntil(file, '!', 1, function(err, buf){
+    t.notOk(err, 'No error');
+    t.equal(buf.toString(), '12345678901234567890', 'Returns contents before match.') 
+  })
+})
+
+test('Match doesn\'t exist, buffer expands', function(t){
+  t.plan(2);
+  readUntil(file, 'nope', 1, function(err, buf){
+    t.ok(err, 'Error on no match.');
+    t.notOk(buf, 'No data returned if no match exists.') 
+  })
+})
