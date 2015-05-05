@@ -40,9 +40,9 @@ test('Match doesn\'t exist, file fits into initial buffer', function(t){
 
 test('Match exists, buffer expands', function(t){
   t.plan(2);
-  readUntil(file, '!', 1, function(err, buf){
+  readUntil(file, '$', 1, function(err, buf){
     t.notOk(err, 'No error');
-    t.equal(buf.toString(), '12345678901234567890', 'Returns contents before match.') 
+    t.equal(buf.toString(), '12345678901234567890', 'Returns contents before match, no implicit RegExp conversion') 
   })
 })
 
@@ -51,5 +51,13 @@ test('Match doesn\'t exist, buffer expands', function(t){
   readUntil(file, 'nope', 1, function(err, buf){
     t.ok(err, 'Error on no match.');
     t.notOk(buf, 'No data returned if no match exists.') 
+  })
+})
+
+test('Regex tests', function(t){
+  t.plan(2);
+  readUntil(file, /9/, 4, function(err, buf){
+    t.notOk(err, 'No error');
+    t.equal(buf.toString(), '12345678', 'Returns contents before match.') 
   })
 })

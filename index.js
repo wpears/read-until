@@ -11,6 +11,7 @@ function readUntil(file, match, bytes, cb){
   var buffer = new Buffer(bytes*15);
   var bytesBeforeMatch = 0;
   var fd;
+  var matcher = makeMatcher();
   
 
   fs.open(file, 'r', function(err, fileDesc){
@@ -37,9 +38,10 @@ function readUntil(file, match, bytes, cb){
     var sliceDiff = startBytes - sliceStart;
 
     var str = buf.slice(sliceStart, startBytes + bytesRead).toString();
-    var test = str.match(match);
-    if(test){
-      bytesBeforeMatch += test.index - sliceDiff;
+    var index = matcher(str);
+
+    if(index > -1){
+      bytesBeforeMatch += index - sliceDiff;
       return cb(null,buf.slice(0, bytesBeforeMatch));
     }else{
       bytesBeforeMatch += bytesRead; 
@@ -52,6 +54,14 @@ function readUntil(file, match, bytes, cb){
       checkBuffer();
       return read(bytesRead * 2);
     }
+  }
+
+
+  function makeMatcher(){
+    if(typeof match === 'string'){
+      return function(str){return str.indexOf(match)}
+    }
+    return function(str){return str.search(match)}
   }
 
 
