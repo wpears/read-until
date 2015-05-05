@@ -27,7 +27,6 @@ function readUntil(file, match, bytes, cb){
 
 
   function parseMatch(err, bytesRead, buf){
-    console.log(bytesBeforeMatch, bytesRead);
     if(err) cb(err); 
     
     //subtract 6 so weird astral code points aren't borked

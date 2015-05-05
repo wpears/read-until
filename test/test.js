@@ -55,9 +55,19 @@ test('Match doesn\'t exist, buffer expands', function(t){
 })
 
 test('Regex tests', function(t){
-  t.plan(2);
+  t.plan(6);
+
   readUntil(file, /9/, 4, function(err, buf){
     t.notOk(err, 'No error');
     t.equal(buf.toString(), '12345678', 'Returns contents before match.') 
+  })
+
+  readUntil(file, /9/g, 4, function(err, buf){
+    t.notOk(err, 'No error');
+    t.equal(buf.toString(), '12345678', 'Returns contents before match - global regex.') 
+  })
+  readUntil(file, /\d/, 4, function(err, buf){
+    t.notOk(err, 'No error');
+    t.equal(buf.toString(), '', 'Returns contents before match - first digit matched') 
   })
 })
